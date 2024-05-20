@@ -29,13 +29,8 @@ clear all %housekeeping
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %which files are we processing ?
-<<<<<<< HEAD
 directory = 'DATA/image_calibration_test/';
 files = dir([directory, 'frame_197_preprocessing.mat']); 
-=======
-directory = 'DATA/test/';
-files = dir([directory, 'Step09*_preprocessing.mat']); 
->>>>>>> parent of 80244f1 (Update for all files)
 
 %how much of the particle diameter is used to fit the synthetic image 
 %(1 = use everything). Change this parameter only if the fit doesn't work 
