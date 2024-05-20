@@ -16,10 +16,11 @@ clear all % Housekeeping
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 pxPerMeter = 0.0077 / 74;
-verbose = false; %Generates lots of plots showing results
+verbose = true; %Generates lots of plots showing results
 
-directory = 'DATA/test/';
-files = dir([directory, 'Step09*.jpg']); %Which files are we processing?
+directory = 'DATA/image_calibration_test/';
+files = dir([directory, 'frame_197.jpg']); %Which files are we processing?
+
 %files = dir('Centers*0001.txt'); %Alternatively, centers files can be loaded. This requires that both particle detections be flagged false however.
 nFrames = length(files); %How many files are we processing ?
 
@@ -29,21 +30,20 @@ doParticleDetectionH = true; %Detect particles using Hough Transform?
 HoughDebug = false; %Debugs Hough Sensitivities so particles are found "better"
 
 DS = 0.0025; % How much should we adjust sensitivity if wrong number of particles are found
-RlargeH = [70 80]; %What radius (in pixels) range do we expect for the large discs?
-RsmallH = [45 55]; %What radius (in pixels) range do we expect for the small discs?
-SL = 0.95; %Sensitivity of the Hough Transform disc detetcor, exact value is Voodo magic...
-SS = 0.89; %Sensitivity of the Hough Transform disc detetcor, exact value is Voodo magic...
+RlargeH = [38 43]; %What radius (in pixels) range do we expect for the large discs?
+RsmallH = [26 33]; %What radius ( in pixels) range do we expect for the small discs?
+SL = 0.945; %Sensitivity of the Hough Transform disc detetcor, exact value is Voodo magic...
+SS = 0.96; %Sensitivity of the Hough Transform disc detetcor, exact value is Voodo magic...
 
-NsmallH = 15; %Number of small discs. Only used in Hough Debug.
-NlargeH = 14; %Number of large discs. Only used in Hough Debug.
-
+NsmallH = 21; %Number of small discs. Only used in Hough Debug.
+NlargeH = 67; %Number of large discs. Only used in Hough Debug.
 % Convolution Method Values
 
 doParticleDetectionC = false; %Detect particles using convolution method?
 ConvDebug = false;
 
 RlargeC = 66; %What radius (in pixels) do we expect for the large discs?
-RsmallC = 47; %What radius (in pixels) do we expect for the small discs? 
+RsmallC = 47; %What radius (in pixels) do we expect for the small discs?
 %Note: The above can be input in a range ONLY if the ConvDebug is set to
 %Note: true. Otherwise, the program needs the radius that works.
 NsmallC = 15; %Number of small discs. Needed for Convolution.
@@ -57,8 +57,8 @@ fsigma = 100; %photoelastic stress coefficient
 g2cal = 100; %Calibration Value for the g^2 method, can be computed by joG2cal.m
 dtol = 10; % How far away can the outlines of 2 particles be to still be considered Neighbours
 
-contactG2Threshold = 0.5; %sum of g2 in a contact area larger than this determines a valid contact
-CR = 10; %radius around a contactact point that is checked for contact validation
+contactG2Threshold = 4; %sum of g2 in a contact area larger than this determines a valid contact
+CR = 7; %radius around a contactact point that is checked for contact validation
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -67,66 +67,62 @@ CR = 10; %radius around a contactact point that is checked for contact validatio
 
 
 if HoughDebug
-    
     imageFile = [directory,files(1).name]; %input filename
     img = imread(imageFile);
     Rimg = img(:,:,1);
     [SL, SS] = PeGSHoughDebug(Rimg, RlargeH, SL, RsmallH, SS, DS, NlargeH, NsmallH);
-    
+
 elseif ConvDebug
-    
     imageFile = [directory,files(1).name]; %input filename
     img = imread(imageFile);
     [RsmallC, RlargeC, NlargeC, NsmallC] = PeGSConvDebug(img, RsmallC, NsmallC, RlargeC, NlargeC);
-    
+
 end
 
 
 for frame = 1:nFrames %Loops for total number of images
-    
+
     if doParticleDetectionH || doParticleDetectionC
-        
+
         imageFile = [directory,files(frame).name]; %input filename
-        img = imread(imageFile); %read a color image that has particles in red and forces in green channel
+        img = image_process(imread(imageFile)); %read a color image that has particles in red and forces in green channel
         Rimg = img(:,:,1); %particle image
         Gimg = img(:,:,2); %force image
-        
+
     else
-        
         centersfile = [directory, files(frame).name]; %input filename
         gImgFile = [directory, 'Img',centersfile(8:end-3),'jpg'];  %adjusted force image filename
         rImgFile = [directory, 'Img',centersfile(8:end-3),'jpg'];  %adjusted force image filename
         Rimg = imread(rImgFile); %particle image
         Gimg = imread(gImgFile); %force image
-        
+
     end
-    
+
     Gimg = im2double(Gimg);
     Rimg = im2double(Rimg);
     Gimg = Gimg-0.5*Rimg;
     Gimg = Gimg.*(Gimg > 0);
     Gimg = imadjust(Gimg,stretchlim(Gimg));
-    
+
     if (verbose)
-        
         figure(1); %Draw the particle Image
         imshow(Rimg);
-        
+
         figure(2); %Draw the Force Image
         imshow(Gimg);
-        
+
     end
-    
+
     if doParticleDetectionH
-        
+
         particle = PeGSDiskFindH(Rimg, RlargeH, SL, RsmallH, SS, pxPerMeter, fsigma);
-        
+
     elseif doParticleDetectionC
-        
+
         particle = PeGSDiskFindC(img, RsmallC, NsmallC, RlargeC, NlargeC);
-        
+
     else
-        
+
         pData = dlmread(centersfile); %Read Position data from centers file
         N = size(pData,1);
         particle(1:N) = struct('id',0,'x',0,'y',0,'r',0,'rm',0,'color','','fsigma',0,'z',0,'f',0,'g2',0,'forces',[],'betas',[],'alphas',[],'neighbours',[],'contactG2s',[],'forceImage',[]);
@@ -136,11 +132,36 @@ for frame = 1:nFrames %Loops for total number of images
             particle(n).y = pData(n,3); %-yoffset;
             particle(n).r = pData(n,4);
         end
-        
+
     end
-    
+
     N = length(particle);
-    
+
+    %delete overlapping particles
+    % Initialize a logical array to mark small particles for deletion
+    toDelete = false(1, N);
+
+    for n = 1:N
+        if particle(n).color == 'b' % Only consider small particles for deletion
+            % Check if the center of the small particle is within the radius of another circle
+            for pointer = 1:N
+                if n ~= pointer % Ensure not to compare the particle with itself
+                    distance = sqrt((particle(n).x - particle(pointer).x)^2 + (particle(n).y - particle(pointer).y)^2);
+                    if distance < (0.5 * particle(pointer).r)
+                        toDelete(n) = true;
+                        break; % Break the inner loop as we only need to mark the particle once
+                    end
+                end
+            end
+        end
+    end
+
+    % Delete particles marked for deletion
+    particle(toDelete) = [];
+
+    % Update N after deletion
+    N = length(particle);
+
     if(verbose)
         %add some information about the particles to the plots
         figure(1)
@@ -159,7 +180,7 @@ for frame = 1:nFrames %Loops for total number of images
         end
         drawnow;
     end
-    
+
     for n=1:N
         %create a circular mask
         % => Find a better way yo do this masking!
@@ -167,7 +188,7 @@ for frame = 1:nFrames %Loops for total number of images
         mask = abs(-r:r);
         mask = mask.^2 + mask.^2';
         mask1 = double(sqrt(mask) <= r);
-        
+
         %This crops out a particle
         cropXstart = round(particle(n).x-r);
         cropXstop = round(particle(n).x-r)+ size(mask1,1)-1;
@@ -176,25 +197,25 @@ for frame = 1:nFrames %Loops for total number of images
         cimg = im2double(Gimg(cropYstart:cropYstop, cropXstart:cropXstop));
         particleImg = cimg.*mask1;
         particle(n).forceImage=particleImg;
-        
+
         %create a circular mask with a radius that is one pixel smaller
         %for cropping out the relevant gradient
 
         mask2 = double(sqrt(mask) <= r-1);
-        
+
         %Compute G^2 for each particle
         [gx,gy] = gradient(particleImg);
         g2 = (gx.^2 + gy.^2).*mask2;
         particle(n).g2 = sum(sum(g2));
         particle(n).f = particle(n).g2/g2cal;
     end
-    
+
     if findNeighbours
-        
+
         particle = PeGSNeighbourFind(Gimg, contactG2Threshold, dtol, CR, verbose, particle);
-        
+
     end
-    
+
     figure(3);
     imshow(Gimg); hold on
     for n = 1:N
@@ -213,8 +234,8 @@ for frame = 1:nFrames %Loops for total number of images
             end
         end
     end
-    
+
     %Save what we got so far
     save([directory, files(frame).name(1:end-4),'_preprocessing.mat'],'particle');
-    
+
 end
