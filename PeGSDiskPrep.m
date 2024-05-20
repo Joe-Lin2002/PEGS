@@ -15,7 +15,7 @@ clear all % Housekeeping
 %                           User defined values                           %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-pxPerMeter = 0.0077 / 74;
+pxPerMeter = 0.01/197;
 verbose = true; %Generates lots of plots showing results
 
 directory = 'DATA/image_calibration_test/';
@@ -53,9 +53,9 @@ NlargeC = 14; %Number of large discs. Needed for Convolution.
 
 findNeighbours = true;
 
-fsigma = 100; %photoelastic stress coefficient
+fsigma = 390.08; %photoelastic stress coefficient
 g2cal = 100; %Calibration Value for the g^2 method, can be computed by joG2cal.m
-dtol = 10; % How far away can the outlines of 2 particles be to still be considered Neighbours
+dtol = 2.5; % How far away can the outlines of 2 particles be to still be considered Neighbours
 
 contactG2Threshold = 4; %sum of g2 in a contact area larger than this determines a valid contact
 CR = 7; %radius around a contactact point that is checked for contact validation
