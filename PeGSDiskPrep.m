@@ -15,7 +15,7 @@ clear all % Housekeeping
 %                           User defined values                           %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-pxPerMeter = 0.01/197;
+pxPerMeter = 0.01/80;
 verbose = true; %Generates lots of plots showing results
 
 directory = 'DATA/image_calibration_test/';
