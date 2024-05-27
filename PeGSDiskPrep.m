@@ -15,11 +15,11 @@ clear all % Housekeeping
 %                           User defined values                           %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-pxPerMeter = 0.01/80;
+pxPerMeter = 0.01/167;
 verbose = true; %Generates lots of plots showing results
 
 directory = 'DATA/image_calibration_test/';
-files = dir([directory, 'frame_197.jpg']); %Which files are we processing?
+files = dir([directory, 'color_comp.jpg']); %Which files are we processing?
 
 %files = dir('Centers*0001.txt'); %Alternatively, centers files can be loaded. This requires that both particle detections be flagged false however.
 nFrames = length(files); %How many files are we processing ?
@@ -30,10 +30,10 @@ doParticleDetectionH = true; %Detect particles using Hough Transform?
 HoughDebug = false; %Debugs Hough Sensitivities so particles are found "better"
 
 DS = 0.0025; % How much should we adjust sensitivity if wrong number of particles are found
-RlargeH = [38 43]; %What radius (in pixels) range do we expect for the large discs?
-RsmallH = [26 33]; %What radius ( in pixels) range do we expect for the small discs?
-SL = 0.945; %Sensitivity of the Hough Transform disc detetcor, exact value is Voodo magic...
-SS = 0.96; %Sensitivity of the Hough Transform disc detetcor, exact value is Voodo magic...
+RlargeH = [160 170]./2; %What radius (in pixels) range do we expect for the large discs?
+RsmallH = [110 150]./2; %What radius ( in pixels) range do we expect for the small discs?
+SL = 0.97; %Sensitivity of the Hough Transform disc detetcor, exact value is Voodo magic...
+SS = 0.97; %Sensitivity of the Hough Transform disc detetcor, exact value is Voodo magic...
 
 NsmallH = 21; %Number of small discs. Only used in Hough Debug.
 NlargeH = 67; %Number of large discs. Only used in Hough Debug.
@@ -57,8 +57,8 @@ fsigma = 390.08; %photoelastic stress coefficient
 g2cal = 100; %Calibration Value for the g^2 method, can be computed by joG2cal.m
 dtol = 3.5; % How far away can the outlines of 2 particles be to still be considered Neighbours
 
-contactG2Threshold = 4; %sum of g2 in a contact area larger than this determines a valid contact
-CR = 10; %radius around a contactact point that is checked for contact validation
+contactG2Threshold = 10; %sum of g2 in a contact area larger than this determines a valid contact
+CR = 15; %radius around a contactact point that is checked for contact validation
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
