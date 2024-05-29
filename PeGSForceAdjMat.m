@@ -216,8 +216,15 @@ for cycle = 1:nFrames %loop over these cycles
  
 end
 
+%add some information about the particles to the plots
+figure(1)
+for n=1:NN
+    viscircles([particle(n).x; particle(n).y]', particle(n).r,'EdgeColor',particle(n).color); %draw particle outline
+    hold on
+    plot(particle(n).x,particle(n).y,'rx'); %Mark particle centers
+    text(particle(n).x,particle(n).y,num2str(particle(n).id),'Color','w');
+end
+drawnow;
+
 %save everything
 save(workspacefilename);
-
-
-
