@@ -13,7 +13,7 @@ close all %Housekeeping
 clear all %Housekeeping
 
 directory = 'DATA/image_calibration_test/';
-files = dir([directory,'color_comp_solved.mat']); %which files are we processing ?
+files = dir([directory,'color_comp2_solved.mat']); %which files are we processing ?
 nFrames = length(files); %how many files are we processing ?
 
 %PARAMETERS NEEDED TO RUN THIS SCRIPT ARE SET HERE
