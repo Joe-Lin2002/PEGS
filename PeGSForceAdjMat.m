@@ -13,7 +13,7 @@ close all %Housekeeping
 clear all %Housekeeping
 
 directory = 'DATA/image_calibration_test/';
-files = dir([directory,'color_comp2_solved.mat']); %which files are we processing ?
+files = dir([directory,'color_comp_solved.mat']); %which files are we processing ?
 nFrames = length(files); %how many files are we processing ?
 
 %PARAMETERS NEEDED TO RUN THIS SCRIPT ARE SET HERE
@@ -192,7 +192,7 @@ for cycle = 1:nFrames %loop over these cycles
             quiver([contact.x],[contact.y],[contact.contactX],[contact.contactY],0,'LineWidth',1.5)
             %set font sizes and labels
             set(gca,'FontSize',fs);
-            title('camera image','FontSize',fs);
+            title('Original image','FontSize',fs);
             hold off;
          figure(2)
             %read and display the original image used as input to peDisc
@@ -207,7 +207,7 @@ for cycle = 1:nFrames %loop over these cycles
             quiver([contact.x],[contact.y],[contact.contactX],[contact.contactY],0,'LineWidth',1.5)
             %set font sizes and labels
             set(gca,'FontSize',fs);
-            title('camera image','FontSize',fs);
+            title('Simluated image','FontSize',fs);
             hold off;
          figure(3)
             imagesc(W); 

@@ -15,50 +15,63 @@ clear all % Housekeeping
 %                           User defined values                           %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-pxPerMeter = 0.01/252;
-verbose = true; %Generates lots of plots showing results
-
+%Loading location defining
+file_name = 'color_comp.jpg';
 directory = 'DATA/image_calibration_test/';
-files = dir([directory, 'color_comp2.jpg']); %Which files are we processing?
+files = dir([directory, file_name]); %Which files are we processing?
 
 %files = dir('Centers*0001.txt'); %Alternatively, centers files can be loaded. This requires that both particle detections be flagged false however.
 nFrames = length(files); %How many files are we processing ?
 
-% Hough Transform Values
+load_calibration = false; %Whether retrieve previous value set?
+save_calibration = true; %Whether save values set defined here?
 
-doParticleDetectionH = true; %Detect particles using Hough Transform?
-HoughDebug = false; %Debugs Hough Sensitivities so particles are found "better"
+if load_calibration == true
+    load([directory,file_name.name(1:end-4),'_config.mat']);
+elseif load_calibration == false %Manually define values and save
+    pxPerMeter = 0.01/252;
+    verbose = true; %Generates lots of plots showing results
 
-DS = 0.0025; % How much should we adjust sensitivity if wrong number of particles are found
-RlargeH = [160 170]./2; %What radius (in pixels) range do we expect for the large discs?
-RsmallH = [230 270]./2; %What radius ( in pixels) range do we expect for the small discs?
-SL = 0.97; %Sensitivity of the Hough Transform disc detetcor, exact value is Voodo magic...
-SS = 0.97; %Sensitivity of the Hough Transform disc detetcor, exact value is Voodo magic...
+    % Hough Transform Values
 
-NsmallH = 21; %Number of small discs. Only used in Hough Debug.
-NlargeH = 67; %Number of large discs. Only used in Hough Debug.
-% Convolution Method Values
+    doParticleDetectionH = true; %Detect particles using Hough Transform?
+    HoughDebug = false; %Debugs Hough Sensitivities so particles are found "better"
 
-doParticleDetectionC = false; %Detect particles using convolution method?
-ConvDebug = false;
+    DS = 0.0025; % How much should we adjust sensitivity if wrong number of particles are found
+    RlargeH = [160 180]./2; %What radius (in pixels) range do we expect for the large discs?
+    RsmallH = [110 140]./2; %What radius ( in pixels) range do we expect for the small discs?
+    SL = 0.97; %Sensitivity of the Hough Transform disc detetcor, exact value is Voodo magic...
+    SS = 0.97; %Sensitivity of the Hough Transform disc detetcor, exact value is Voodo magic...
 
-RlargeC = 66; %What radius (in pixels) do we expect for the large discs?
-RsmallC = 47; %What radius (in pixels) do we expect for the small discs?
-%Note: The above can be input in a range ONLY if the ConvDebug is set to
-%Note: true. Otherwise, the program needs the radius that works.
-NsmallC = 15; %Number of small discs. Needed for Convolution.
-NlargeC = 14; %Number of large discs. Needed for Convolution.
+    NsmallH = 21; %Number of small discs. Only used in Hough Debug.
+    NlargeH = 67; %Number of large discs. Only used in Hough Debug.
+    % Convolution Method Values
 
-% Neighbour Finding Values
+    doParticleDetectionC = false; %Detect particles using convolution method?
+    ConvDebug = false;
 
-findNeighbours = true;
+    RlargeC = 66; %What radius (in pixels) do we expect for the large discs?
+    RsmallC = 47; %What radius (in pixels) do we expect for the small discs?
+    %Note: The above can be input in a range ONLY if the ConvDebug is set to
+    %Note: true. Otherwise, the program needs the radius that works.
+    NsmallC = 15; %Number of small discs. Needed for Convolution.
+    NlargeC = 14; %Number of large discs. Needed for Convolution.
 
-fsigma = 390.08; %photoelastic stress coefficient
-g2cal = 100; %Calibration Value for the g^2 method, can be computed by joG2cal.m
-dtol = 3.5; % How far away can the outlines of 2 particles be to still be considered Neighbours
+    % Neighbour Finding Values
 
-contactG2Threshold = 17; %sum of g2 in a contact area larger than this determines a valid contact
-CR = 33; %radius around a contactact point that is checked for contact validation
+    findNeighbours = true;
+
+    fsigma = 390.08; %photoelastic stress coefficient
+    g2cal = 100; %Calibration Value for the g^2 method, can be computed by joG2cal.m
+    dtol = 3.5; % How far away can the outlines of 2 particles be to still be considered Neighbours
+
+    contactG2Threshold = 20; %sum of g2 in a contact area larger than this determines a valid contact
+    CR = 28; %radius around a contactact point that is checked for contact validation
+
+    if save_calibration==true
+        save([directory,file_name(1:end-4),'_config.mat']);
+    end
+end
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
