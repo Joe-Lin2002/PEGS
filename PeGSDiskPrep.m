@@ -16,8 +16,8 @@ clear all % Housekeeping
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %Loading location defining
-file_name = 'color_comp.jpg';
-directory = 'DATA/image_calibration_test/';
+file_name = 'IMG_0765.jpeg';
+directory = 'DATA/static_verification/';
 files = dir([directory, file_name]); %Which files are we processing?
 
 %files = dir('Centers*0001.txt'); %Alternatively, centers files can be loaded. This requires that both particle detections be flagged false however.
@@ -29,7 +29,7 @@ save_calibration = true; %Whether save values set defined here?
 if load_calibration == true
     load([directory,file_name.name(1:end-4),'_config.mat']);
 elseif load_calibration == false %Manually define values and save
-    pxPerMeter = 0.01/252;
+    pxPerMeter = 0.01/194;
     verbose = true; %Generates lots of plots showing results
 
     % Hough Transform Values
@@ -38,10 +38,10 @@ elseif load_calibration == false %Manually define values and save
     HoughDebug = false; %Debugs Hough Sensitivities so particles are found "better"
 
     DS = 0.0025; % How much should we adjust sensitivity if wrong number of particles are found
-    RlargeH = [160 180]./2; %What radius (in pixels) range do we expect for the large discs?
-    RsmallH = [110 140]./2; %What radius ( in pixels) range do we expect for the small discs?
-    SL = 0.97; %Sensitivity of the Hough Transform disc detetcor, exact value is Voodo magic...
-    SS = 0.97; %Sensitivity of the Hough Transform disc detetcor, exact value is Voodo magic...
+    RlargeH = [180 200]./2; %What radius (in pixels) range do we expect for the large discs?
+    RsmallH = [140 160]./2; %What radius ( in pixels) range do we expect for the small discs?
+    SL = 0.96; %Sensitivity of the Hough Transform disc detetcor, exact value is Voodo magic...
+    SS = 0.96; %Sensitivity of the Hough Transform disc detetcor, exact value is Voodo magic...
 
     NsmallH = 21; %Number of small discs. Only used in Hough Debug.
     NlargeH = 67; %Number of large discs. Only used in Hough Debug.
@@ -65,8 +65,8 @@ elseif load_calibration == false %Manually define values and save
     g2cal = 100; %Calibration Value for the g^2 method, can be computed by joG2cal.m
     dtol = 3.5; % How far away can the outlines of 2 particles be to still be considered Neighbours
 
-    contactG2Threshold = 20; %sum of g2 in a contact area larger than this determines a valid contact
-    CR = 28; %radius around a contactact point that is checked for contact validation
+    contactG2Threshold = 1; %sum of g2 in a contact area larger than this determines a valid contact
+    CR = 100; %radius around a contactact point that is checked for contact validation
 
     if save_calibration==true
         save([directory,file_name(1:end-4),'_config.mat']);
