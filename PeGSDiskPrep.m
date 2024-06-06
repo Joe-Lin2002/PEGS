@@ -16,7 +16,7 @@ clear all % Housekeeping
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %Loading location defining
-file_name = 'IMG_0765.jpeg';
+file_name = 'IMG_0765.jpg';
 directory = 'DATA/static_verification/';
 files = dir([directory, file_name]); %Which files are we processing?
 
@@ -27,7 +27,7 @@ load_calibration = false; %Whether retrieve previous value set?
 save_calibration = true; %Whether save values set defined here?
 
 if load_calibration == true
-    load([directory,file_name.name(1:end-4),'_config.mat']);
+    load([directory,file_name(1:end-4),'_config.mat']);
 elseif load_calibration == false %Manually define values and save
     pxPerMeter = 0.01/194;
     verbose = true; %Generates lots of plots showing results
@@ -65,8 +65,8 @@ elseif load_calibration == false %Manually define values and save
     g2cal = 100; %Calibration Value for the g^2 method, can be computed by joG2cal.m
     dtol = 3.5; % How far away can the outlines of 2 particles be to still be considered Neighbours
 
-    contactG2Threshold = 1; %sum of g2 in a contact area larger than this determines a valid contact
-    CR = 100; %radius around a contactact point that is checked for contact validation
+    contactG2Threshold = 0; %sum of g2 in a contact area larger than this determines a valid contact
+    CR = 20; %radius around a contactact point that is checked for contact validation
 
     if save_calibration==true
         save([directory,file_name(1:end-4),'_config.mat']);
@@ -150,7 +150,7 @@ for frame = 1:nFrames %Loops for total number of images
 
     N = length(particle);
 
-    %delete overlapping particles
+    % Delete overlapping particles
     % Initialize a logical array to mark small particles for deletion
     toDelete = false(1, N);
 
