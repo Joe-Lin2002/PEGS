@@ -20,6 +20,10 @@ file_name = 'IMG_0765.jpg';
 directory = 'DATA/static_verification/';
 files = dir([directory, file_name]); %Which files are we processing?
 
+% Load the image to get its dimensions
+img = imread([directory, file_name]);
+[imageHeight, imageWidth, ~] = size(img); % Get image dimensions
+
 %files = dir('Centers*0001.txt'); %Alternatively, centers files can be loaded. This requires that both particle detections be flagged false however.
 nFrames = length(files); %How many files are we processing ?
 
@@ -39,7 +43,7 @@ elseif load_calibration == false %Manually define values and save
 
     DS = 0.0025; % How much should we adjust sensitivity if wrong number of particles are found
     RlargeH = [180 200]./2; %What radius (in pixels) range do we expect for the large discs?
-    RsmallH = [140 160]./2; %What radius ( in pixels) range do we expect for the small discs?
+    RsmallH = [140 160]./2; %What radius (in pixels) range do we expect for the small discs?
     SL = 0.96; %Sensitivity of the Hough Transform disc detetcor, exact value is Voodo magic...
     SS = 0.96; %Sensitivity of the Hough Transform disc detetcor, exact value is Voodo magic...
 
@@ -65,8 +69,8 @@ elseif load_calibration == false %Manually define values and save
     g2cal = 100; %Calibration Value for the g^2 method, can be computed by joG2cal.m
     dtol = 3.5; % How far away can the outlines of 2 particles be to still be considered Neighbours
 
-    contactG2Threshold = 0; %sum of g2 in a contact area larger than this determines a valid contact
-    CR = 20; %radius around a contactact point that is checked for contact validation
+    contactG2Threshold = 10; %sum of g2 in a contact area larger than this determines a valid contact
+    CR = 30; %radius around a contactact point that is checked for contact validation
 
     if save_calibration==true
         save([directory,file_name(1:end-4),'_config.mat']);
@@ -151,7 +155,7 @@ for frame = 1:nFrames %Loops for total number of images
     N = length(particle);
 
     % Delete overlapping particles
-    % Initialize a logical array to mark small particles for deletion
+    % Initialize a logical array to mark particles for deletion
     toDelete = false(1, N);
 
     for n = 1:N
@@ -167,6 +171,12 @@ for frame = 1:nFrames %Loops for total number of images
                 end
             end
         end
+
+        % Check if part of the circle is outside the image boundaries
+        if particle(n).x - particle(n).r < 0 || particle(n).x + particle(n).r > imageWidth || ...
+                particle(n).y - particle(n).r < 0 || particle(n).y + particle(n).r > imageHeight
+            toDelete(n) = true;
+        end
     end
 
     % Delete particles marked for deletion
@@ -174,6 +184,7 @@ for frame = 1:nFrames %Loops for total number of images
 
     % Update N after deletion
     N = length(particle);
+
 
     if(verbose)
         %add some information about the particles to the plots
@@ -195,6 +206,7 @@ for frame = 1:nFrames %Loops for total number of images
     end
 
     for n=1:N
+
         %create a circular mask
         % => Find a better way yo do this masking!
         r = particle(n).r;
