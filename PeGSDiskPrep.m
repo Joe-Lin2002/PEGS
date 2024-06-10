@@ -67,10 +67,11 @@ elseif load_calibration == false %Manually define values and save
 
     fsigma = 390.08; %photoelastic stress coefficient
     g2cal = 100; %Calibration Value for the g^2 method, can be computed by joG2cal.m
-    dtol = 3.5; % How far away can the outlines of 2 particles be to still be considered Neighbours
+    dtol = 5; % How far away can the outlines of 2 particles be to still be considered Neighbours
+    override = 1770; % Self assign a value for the top wall for container detection
 
     contactG2Threshold = 10; %sum of g2 in a contact area larger than this determines a valid contact
-    CR = 30; %radius around a contactact point that is checked for contact validation
+    CR = 20; %radius around a contactact point that is checked for contact validation
 
     if save_calibration==true
         save([directory,file_name(1:end-4),'_config.mat']);
@@ -182,7 +183,10 @@ for frame = 1:nFrames %Loops for total number of images
     % Delete particles marked for deletion
     particle(toDelete) = [];
 
-    % Update N after deletion
+    % Update N after deletion and renumbering
+    for i = 1:length(particle)
+        particle(i).id = i;
+    end
     N = length(particle);
 
 
@@ -237,7 +241,7 @@ for frame = 1:nFrames %Loops for total number of images
 
     if findNeighbours
 
-        particle = PeGSNeighbourFind(Gimg, contactG2Threshold, dtol, CR, verbose, particle);
+        particle = PeGSNeighbourFind(Gimg, contactG2Threshold, dtol, CR, verbose, particle, override);
 
     end
 

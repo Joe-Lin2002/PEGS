@@ -12,8 +12,8 @@
 close all %Housekeeping
 clear all %Housekeeping
 
-directory = 'DATA/image_calibration_test/';
-files = dir([directory,'color_comp_solved.mat']); %which files are we processing ?
+directory = 'DATA/static_verification/';
+files = dir([directory,'IMG_0765_solved.mat']); %which files are we processing ?
 nFrames = length(files); %how many files are we processing ?
 
 %PARAMETERS NEEDED TO RUN THIS SCRIPT ARE SET HERE

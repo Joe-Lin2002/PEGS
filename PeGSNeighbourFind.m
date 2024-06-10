@@ -1,4 +1,4 @@
-function [particle] = PeGSNeighbourFind(Gimg, contactG2Threshold, dtol, CR, verbose, particle)
+function [particle] = PeGSNeighbourFind(Gimg, contactG2Threshold, dtol, CR, verbose, particle, override)
 %UNTITLED4 Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -94,6 +94,10 @@ rightwall = max(circs(:,2) + circs(:,3));
 leftwall = min(circs(:,2) - circs(:,3)); %Finds our theorhetical wall locations
 topwall = min(circs(:,1) - circs(:,3));
 bottomwall = max(circs(:,1) + circs(:,3));
+
+if override ~= 0
+    topwall = override; 
+end
 
 rwi = find(circs(:,2) + circs(:,3) + dtol*1.5 >= rightwall);
 lwi = find(circs(:,2) - circs(:,3) - dtol*1.5 <= leftwall); %Indexes based on particles that would be considered to be touching the wall
