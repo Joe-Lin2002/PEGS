@@ -13,8 +13,8 @@ files = dir([directory, 'IMG_0765_solved.mat-postProcessingWorkspace.mat']); % w
 load([directory, files(1).name]);
 
 % Define the particle numbers to analyze
-particle_numbers = [78, 21, 24, 129, 9, 27, 35];
-%particle_numbers = [92, 23, 3, 29];
+%particle_numbers = [78, 21, 24, 129, 9, 27, 35];
+particle_numbers = [92, 23, 3, 29];
 
 % Initialize the sum of forces
 Sumforce = 0;
@@ -26,6 +26,7 @@ for num = particle_numbers
         % Get the forces and beta values for the particle
         forces = particle(num).forces;
         beta = particle(num).betas;
+        alpha = particle(num).alphas;
         
         % Loop through each force and corresponding beta value
         for i = 1:length(forces)
