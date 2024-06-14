@@ -33,7 +33,7 @@ for num = particle_numbers
             % Check if the beta value is between -pi and 0
             if beta(i) >= -pi && beta(i) <= 0
                 % Transfer the force segment into a vertical force segment
-                vertical_force = abs(forces(i) * sin(beta(i)));
+                vertical_force = forces(i) * (cos((pi/2) - (alpha(i) + beta(i))));
                 % Sum up the forces
                 Sumforce = Sumforce + vertical_force;
             end
