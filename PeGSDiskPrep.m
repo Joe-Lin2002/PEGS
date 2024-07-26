@@ -16,7 +16,7 @@ clear all % Housekeeping
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %Loading location defining
-file_name = 'DSC_0031_crop.jpg';
+file_name = 'DSC_0031.jpg';
 directory = 'DATA/static_verification/';
 files = dir([directory, file_name]); %Which files are we processing?
 
