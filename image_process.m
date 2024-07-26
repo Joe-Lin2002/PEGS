@@ -6,7 +6,7 @@ function post_img = image_process(image)
     hsvImage = rgb2hsv(image);
 
     % Decrease saturation
-    hsvImage(:, :, 2) = hsvImage(:, :, 2) * 1.15; % Decrease saturation factor (e.g., 0.5)
+    hsvImage(:, :, 2) = hsvImage(:, :, 2) * 1.3; % Decrease saturation factor (e.g., 0.5)
 
     % Convert the image back to RGB color space
     processedImage = hsv2rgb(hsvImage);

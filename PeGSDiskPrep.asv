@@ -16,7 +16,7 @@ clear all % Housekeeping
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %Loading location defining
-file_name = 'IMG_0765.jpg';
+file_name = 'DSC_0031_crop.jpg';
 directory = 'DATA/static_verification/';
 files = dir([directory, file_name]); %Which files are we processing?
 
@@ -33,7 +33,7 @@ save_calibration = true; %Whether save values set defined here?
 if load_calibration == true
     load([directory,file_name(1:end-4),'_config.mat']);
 elseif load_calibration == false %Manually define values and save
-    pxPerMeter = 0.01/194;
+    pxPerMeter = 0.01/88;
     verbose = true; %Generates lots of plots showing results
 
     % Hough Transform Values
@@ -42,9 +42,9 @@ elseif load_calibration == false %Manually define values and save
     HoughDebug = false; %Debugs Hough Sensitivities so particles are found "better"
 
     DS = 0.0025; % How much should we adjust sensitivity if wrong number of particles are found
-    RlargeH = [180 200]./2; %What radius (in pixels) range do we expect for the large discs?
-    RsmallH = [140 160]./2; %What radius (in pixels) range do we expect for the small discs?
-    SL = ; %Sensitivity of the Hough Transform disc detetcor, exact value is Voodo magic...
+    RlargeH = [84 96]./2; %What radius (in pixels) range do we expect for the large discs?
+    RsmallH = [56 82]./2; %What radius (in pixels) range do we expect for the small discs?
+    SL = 0.96; %Sensitivity of the Hough Transform disc detetcor, exact value is Voodo magic...
     SS = 0.96; %Sensitivity of the Hough Transform disc detetcor, exact value is Voodo magic...
 
     NsmallH = 21; %Number of small discs. Only used in Hough Debug.
@@ -68,10 +68,10 @@ elseif load_calibration == false %Manually define values and save
     fsigma = 390.08; %photoelastic stress coefficient
     g2cal = 100; %Calibration Value for the g^2 method, can be computed by joG2cal.m
     dtol = 5; % How far away can the outlines of 2 particles be to still be considered Neighbours
-    override = 1770; % Self assign a value for the top wall for container detection
+    override = 1450; % Self assign a value for the top wall for container detection
 
-    contactG2Threshold = 10; %sum of g2 in a contact area larger than this determines a valid contact
-    CR = 20; %radius around a contactact point that is checked for contact validation
+    contactG2Threshold = 9; %sum of g2 in a contact area larger than this determines a valid contact
+    CR = 15; %radius around a contactact point that is checked for contact validation
 
     if save_calibration==true
         save([directory,file_name(1:end-4),'_config.mat']);
@@ -161,6 +161,27 @@ for frame = 1:nFrames %Loops for total number of images
 
     for n = 1:N
         if particle(n).color == 'b' % Only consider small particles for deletion
+            % Check if the center of the small particle is within the radius of another circle
+            for pointer = 1:N
+                if n ~= pointer % Ensure not to compare the particle with itself
+                    distance = sqrt((particle(n).x - particle(pointer).x)^2 + (particle(n).y - particle(pointer).y)^2);
+                    if distance < (0.5 * particle(pointer).r)
+                        toDelete(n) = true;
+                        break; % Break the inner loop as we only need to mark the particle once
+                    end
+                end
+            end
+        end
+
+        % Check if part of the circle is outside the image boundaries
+        if particle(n).x - particle(n).r < 0 || particle(n).x + particle(n).r > imageWidth || ...
+                particle(n).y - particle(n).r < 0 || particle(n).y + particle(n).r > imageHeight
+            toDelete(n) = true;
+        end
+    end
+
+    for n = 1:N
+        if particle(n).color == 'r' % Only consider lar particles for deletion
             % Check if the center of the small particle is within the radius of another circle
             for pointer = 1:N
                 if n ~= pointer % Ensure not to compare the particle with itself
