@@ -16,7 +16,7 @@ clear all % Housekeeping
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %Loading location defining
-file_name = 'DSC_0031.jpg';
+file_name = 'DSC_0032_cropped.jpg';
 directory = 'DATA/static_verification/';
 files = dir([directory, file_name]); %Which files are we processing?
 
@@ -68,7 +68,7 @@ elseif load_calibration == false %Manually define values and save
     fsigma = 390.08; %photoelastic stress coefficient
     g2cal = 100; %Calibration Value for the g^2 method, can be computed by joG2cal.m
     dtol = 5; % How far away can the outlines of 2 particles be to still be considered Neighbours
-    override = 1450; % Self assign a value for the top wall for container detection
+    override = 1813; % Self assign a value for the top wall for container detection
 
     contactG2Threshold = 10; %sum of g2 in a contact area larger than this determines a valid contact
     CR = 12; %radius around a contactact point that is checked for contact validation

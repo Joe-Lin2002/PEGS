@@ -30,7 +30,7 @@ clear all %housekeeping
 
 %which files are we processing ?
 directory = 'DATA/static_verification/';
-files = dir([directory, 'DSC_0031_crop_preprocessing.mat']); 
+files = dir([directory, 'DSC_0032_cropped_preprocessing.mat']); 
 
 %how much of the particle diameter is used to fit the synthetic image 
 %(1 = use everything). Change this parameter only if the fit doesn't work 
