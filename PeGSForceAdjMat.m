@@ -12,8 +12,8 @@
 close all %Housekeeping
 clear all %Housekeeping
 
-directory = 'DATA/static_verification/';
-files = dir([directory,'DSC_0032_cropped_solved.mat']); %which files are we processing ?
+directory = 'DATA/dynamics_impact/';
+files = dir([directory,'frame_000014_crop._solved.mat']); %which files are we processing ?
 nFrames = length(files); %how many files are we processing ?
 
 %PARAMETERS NEEDED TO RUN THIS SCRIPT ARE SET HERE

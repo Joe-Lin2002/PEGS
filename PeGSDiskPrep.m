@@ -16,8 +16,8 @@ clear all % Housekeeping
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %Loading location defining
-file_name = 'DSC_0032_cropped.jpg';
-directory = 'DATA/static_verification/';
+file_name = 'frame_000014_crop.tiff';
+directory = 'DATA/dynamics_impact/';
 files = dir([directory, file_name]); %Which files are we processing?
 
 % Load the image to get its dimensions
@@ -33,7 +33,7 @@ save_calibration = true; %Whether save values set defined here?
 if load_calibration == true
     load([directory,file_name(1:end-4),'_config.mat']);
 elseif load_calibration == false %Manually define values and save
-    pxPerMeter = 0.01/88;
+    pxPerMeter = 0.01/37;
     verbose = true; %Generates lots of plots showing results
 
     % Hough Transform Values
@@ -42,8 +42,8 @@ elseif load_calibration == false %Manually define values and save
     HoughDebug = false; %Debugs Hough Sensitivities so particles are found "better"
 
     DS = 0.0025; % How much should we adjust sensitivity if wrong number of particles are found
-    RlargeH = [84 96]./2; %What radius (in pixels) range do we expect for the large discs?
-    RsmallH = [56 82]./2; %What radius (in pixels) range do we expect for the small discs?
+    RlargeH = [40 46]./2; %What radius (in pixels) range do we expect for the large discs?
+    RsmallH = [30 36]./2; %What radius (in pixels) range do we expect for the small discs?
     SL = 0.94; %Sensitivity of the Hough Transform disc detetcor, exact value is Voodo magic...
     SS = 0.96; %Sensitivity of the Hough Transform disc detetcor, exact value is Voodo magic...
 
@@ -68,10 +68,10 @@ elseif load_calibration == false %Manually define values and save
     fsigma = 390.08; %photoelastic stress coefficient
     g2cal = 100; %Calibration Value for the g^2 method, can be computed by joG2cal.m
     dtol = 5; % How far away can the outlines of 2 particles be to still be considered Neighbours
-    override = 1813; % Self assign a value for the top wall for container detection
+    override = 293; % Self assign a value for the top wall for container detection
 
-    contactG2Threshold = 10; %sum of g2 in a contact area larger than this determines a valid contact
-    CR = 12; %radius around a contactact point that is checked for contact validation
+    contactG2Threshold = 3; %sum of g2 in a contact area larger than this determines a valid contact
+    CR = 6; %radius around a contactact point that is checked for contact validation
 
     if save_calibration==true
         save([directory,file_name(1:end-4),'_config.mat']);

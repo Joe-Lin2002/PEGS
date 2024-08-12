@@ -29,8 +29,8 @@ clear all %housekeeping
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %which files are we processing ?
-directory = 'DATA/static_verification/';
-files = dir([directory, 'DSC_0032_cropped_preprocessing.mat']); 
+directory = 'DATA/dynamics_impact/';
+files = dir([directory, 'frame_000014_crop._preprocessing.mat']); 
 
 %how much of the particle diameter is used to fit the synthetic image 
 %(1 = use everything). Change this parameter only if the fit doesn't work 
